@@ -16,11 +16,18 @@ on run
     set scriptPath to POSIX path of (appPath as string) & "Contents/Resources/display-bt-watcher.sh"
     do shell script "nohup '" & scriptPath & "' > /dev/null 2>&1 &"
 
-    -- Build the menu bar item.
+    -- Build the menu bar item. Use the SF Symbol "display" in template
+    -- mode so it picks up the system tint and matches other menu bar icons.
     set statusBar to current application's NSStatusBar's systemStatusBar()
     set theItem to statusBar's statusItemWithLength:-1.0
-    theItem's setTitle:"📺"
-    theItem's setToolTip:"macos-bluetooth-disconnect-on-display-sleep"
+
+    set symbolImg to current application's NSImage's imageWithSystemSymbolName:"display" accessibilityDescription:"Display"
+    if symbolImg is not missing value then
+        symbolImg's setTemplate:true
+        theItem's setImage:symbolImg
+    else
+        theItem's setTitle:"Display"
+    end if
 
     set theMenu to current application's NSMenu's alloc()'s init()
 

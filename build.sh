@@ -7,7 +7,7 @@
 #
 # Requirements:
 #   - macOS with osacompile (built-in)
-#   - Xcode command line tools (for codesign)
+#   - Xcode command-line tools (for codesign)
 
 set -euo pipefail
 
@@ -15,6 +15,7 @@ cd "$(dirname "$0")"
 
 APP_NAME="Display BT Toggle"
 APP_BUNDLE="${APP_NAME}.app"
+RESOURCES_DIR="$APP_BUNDLE/Contents/Resources"
 
 rm -rf "$APP_BUNDLE"
 
@@ -22,9 +23,16 @@ rm -rf "$APP_BUNDLE"
 osacompile -o "$APP_BUNDLE" display_bt_toggle.applescript
 
 # Bundle the watcher script.
-mkdir -p "$APP_BUNDLE/Contents/Resources"
-cp display-bt-watcher.sh "$APP_BUNDLE/Contents/Resources/display-bt-watcher.sh"
-chmod +x "$APP_BUNDLE/Contents/Resources/display-bt-watcher.sh"
+mkdir -p "$RESOURCES_DIR"
+cp display-bt-watcher.sh "$RESOURCES_DIR/display-bt-watcher.sh"
+chmod +x "$RESOURCES_DIR/display-bt-watcher.sh"
+
+# Replace the stock AppleScript applet icon with our SF Symbol-derived icon.
+# The render-icns step produces /tmp/Display.icns via Swift + sips + iconutil.
+# See render-icon.sh.
+if [ -f /tmp/Display.icns ]; then
+    cp /tmp/Display.icns "$RESOURCES_DIR/applet.icns"
+fi
 
 # Configure as a menu bar app (no Dock icon, no menu bar).
 PLIST="$APP_BUNDLE/Contents/Info.plist"

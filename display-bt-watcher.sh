@@ -20,7 +20,7 @@ fi
 
 # Defaults (overridden by config file).
 : "${BT:=/opt/homebrew/bin/blueutil}"
-: "${MAC:=88-92-cc-e5-ce-aa}"
+: "${MAC:=aa-bb-cc-dd-ee-ff}"
 : "${LOG_PREDICATE:=category == \"display\" AND subsystem == \"com.apple.SkyLight\"}"
 : "${SLEEP_PATTERN:=Event: Will Sleep|Event: Did Sleep}"
 : "${WAKE_PATTERN:=Event: Did Wake}"

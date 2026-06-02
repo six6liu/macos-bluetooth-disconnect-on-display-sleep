@@ -6,7 +6,7 @@
 
 # MAC address of the Bluetooth device to disconnect when the display sleeps.
 # Find yours with:  blueutil --paired
-MAC="88-92-cc-e5-ce-aa"
+MAC="aa-bb-cc-dd-ee-ff"
 
 # Path to blueutil (only change if you installed it somewhere unusual).
 BT="/opt/homebrew/bin/blueutil"

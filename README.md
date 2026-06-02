@@ -57,7 +57,7 @@ blueutil --paired
 Look for the device you want to release. Example output:
 
 ```
-address: 88-92-cc-e5-ce-aa, connected (master, 0 dBm), not favourite, paired, name: "OPPO Enco Free4", ...
+address: aa-bb-cc-dd-ee-ff, connected (master, 0 dBm), not favourite, paired, name: "OPPO Enco Free4", ...
 ```
 
 Copy the address (the `xx-xx-xx-xx-xx-xx` part).
@@ -106,7 +106,7 @@ All configuration lives in `~/.config/macos-bluetooth-disconnect/config`. Copy `
 
 | Variable | Default | What it does |
 |---|---|---|
-| `MAC` | `88-92-cc-e5-ce-aa` | Bluetooth MAC of the device to disconnect on display sleep. |
+| `MAC` | `aa-bb-cc-dd-ee-ff` | Bluetooth MAC of the device to disconnect on display sleep. |
 | `BT` | `/opt/homebrew/bin/blueutil` | Path to `blueutil`. Change if you installed it elsewhere. |
 | `LOG_PREDICATE` | `category == "display" AND subsystem == "com.apple.SkyLight"` | Predicate for `log stream`. Change to listen to different events (see below). |
 | `SLEEP_PATTERN` | `Event: Will Sleep\|Event: Did Sleep` | awk regex matching "going to sleep" events. |
@@ -119,7 +119,7 @@ All configuration lives in `~/.config/macos-bluetooth-disconnect/config`. Copy `
 **Multiple devices (any of two earbuds):**
 
 ```bash
-MAC="88-92-cc-e5-ce-aa, aa-bb-cc-dd-ee-ff"
+MAC="aa-bb-cc-dd-ee-ff, 11-22-33-44-55-66"
 ON_SLEEP_CMD="for m in ${MAC//,/ }; do $BT --disconnect $m; done"
 ON_WAKE_CMD="for m in ${MAC//,/ }; do $BT --connect $m; done"
 ```
@@ -184,7 +184,7 @@ log stream --predicate 'category == "display" AND subsystem == "com.apple.SkyLig
 awk matches SLEEP_PATTERN → runs ON_SLEEP_CMD
    │
    ▼
-blueutil --disconnect 88-92-cc-e5-ce-aa
+blueutil --disconnect aa-bb-cc-dd-ee-ff
    │
    ▼
 The Bluetooth device is released. Your phone can now pair with it.
