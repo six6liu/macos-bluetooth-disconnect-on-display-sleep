@@ -1,0 +1,30 @@
+# macos-bluetooth-disconnect-on-display-sleep — user config
+#
+# Copy this file to ~/.config/macos-bluetooth-disconnect/config and edit.
+# Lines starting with # are comments. Anything not defined here falls back
+# to the defaults at the top of display-bt-watcher.sh.
+
+# MAC address of the Bluetooth device to disconnect when the display sleeps.
+# Find yours with:  blueutil --paired
+MAC="88-92-cc-e5-ce-aa"
+
+# Path to blueutil (only change if you installed it somewhere unusual).
+BT="/opt/homebrew/bin/blueutil"
+
+# ----- Advanced: customize the trigger and the action -----
+
+# Unified-log predicate for `log stream`. Default: any display power event.
+# See: man log
+LOG_PREDICATE='category == "display" AND subsystem == "com.apple.SkyLight"'
+
+# awk regex matching "display is going to sleep" events.
+SLEEP_PATTERN='Event: Will Sleep|Event: Did Sleep'
+
+# awk regex matching "display is waking up" events.
+WAKE_PATTERN='Event: Did Wake'
+
+# Commands to run on each event. Defaults: blueutil disconnect/connect.
+# You can swap these for any shell command — e.g. play a sound, run a
+# Shortcut, send a notification, toggle a Home Assistant switch.
+ON_SLEEP_CMD="$BT --disconnect $MAC"
+ON_WAKE_CMD="$BT --connect $MAC"
