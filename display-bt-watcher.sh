@@ -28,13 +28,37 @@ fi
 : "${ON_WAKE_CMD:=$BT --connect $MAC}"
 
 # --- Main loop ------------------------------------------------------------
-/usr/bin/log stream --predicate "$LOG_PREDICATE" --style compact 2>&1 | \
-/usr/bin/awk \
-    -v sleep_pat="$SLEEP_PATTERN" \
-    -v wake_pat="$WAKE_PATTERN" \
-    -v on_sleep="$ON_SLEEP_CMD" \
-    -v on_wake="$ON_WAKE_CMD" \
-    '
-    $0 ~ sleep_pat { system(on_sleep) }
-    $0 ~ wake_pat  { system(on_wake)  }
-    '
+
+while true; do
+    /usr/bin/log stream \
+        --predicate "$LOG_PREDICATE" \
+        --style compact 2>&1 | \
+    /usr/bin/awk \
+        -v sleep_pat="$SLEEP_PATTERN" \
+        -v wake_pat="$WAKE_PATTERN" \
+        -v on_sleep="$ON_SLEEP_CMD" \
+        -v on_wake="$ON_WAKE_CMD" \
+        '
+        BEGIN {
+            state = "awake"
+        }
+
+        $0 ~ sleep_pat {
+            if (state != "sleep") {
+                system(on_sleep)
+                state = "sleep"
+            }
+        }
+
+        $0 ~ wake_pat {
+            if (state != "awake") {
+                system(on_wake)
+                state = "awake"
+            }
+        }
+        '
+
+    # log stream terminou inesperadamente.
+    # Aguarda um pouco e inicia novamente.
+    sleep 2
+done
